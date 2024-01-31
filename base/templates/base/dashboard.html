@@ -1,0 +1,157 @@
+{% extends 'main.html' %}
+{% block content %}
+        <main class="main">
+        	<div class="page-header text-center" style="background-image: url('/static/images/page-header-bg.jpg')">
+        		<div class="container">
+        			<h1 class="page-title">My Account<span>Shop</span></h1>
+        		</div><!-- End .container -->
+        	</div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="dashboard">
+	                <div class="container">
+	                	<div class="row">
+	                		<aside class="col-md-4 col-lg-3">
+	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+								    <li class="nav-item">
+								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
+								    </li>
+								</ul>
+	                		</aside><!-- End .col-lg-3 -->
+
+	                		<div class="col-md-8 col-lg-9">
+	                			<div class="tab-content">
+								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+								    	<p>Hello <span class="font-weight-normal text-dark">{{host}}</span> (not <span class="font-weight-normal text-dark">{{host}}</span>? <a href="{% url 'logout' %}">Log out</a>) 
+								    	<br>
+								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
+								    </div><!-- .End .tab-pane -->
+									{% if all_orders %}
+									<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+								    	<table class="table">
+											<thead>
+												<tr>
+													<th>Date</th>
+													<th>Items</th>
+													<th>Total cost</th>
+													<th>Delivery complete</th>
+												</tr>
+											</thead>
+											<tbody>
+												{% for order in all_orders %}
+												<tr>
+													<td class="product-col">
+															<h3 class="product-title">
+																<a href="#">{{ order.date_created|timesince }} ago</a>
+															</h3><!-- End .product-title -->
+													</td>
+													{% if order.items.count >= 2 %}
+													<td class="price-col"><a href="{% url 'order_item' order.id %}" title="view items"><span>+{{order.items.count}} items</span></a></td>
+													{% else %}
+													{% for item in order.items.all %}
+													<td class="price-col">{{ item.name }} - ${{ item.price }} <br> </td>
+													{% endfor %}
+													{% endif %}
+													<td class="stock-col"><span class="in-stock">${{ order.total_cost }}</span></td>
+													<td class="stock-col"><span class="in-stock">{{ order.is_delivered }}</span></td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table><!-- End .table table-wishlist -->
+								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+								    </div><!-- .End .tab-pane -->
+									{% else %}
+								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+								    	<p>No order has been made yet.</p>
+								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+								    </div>
+									{% endif %}
+
+
+								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+								    	<p>The following addresses will be used on the checkout page by default.</p>
+
+								    	<div class="row">
+								    		<div class="col-lg-6">
+								    			<div class="card card-dashboard">
+								    				<div class="card-body">
+								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+														{% if billing_details %}
+														{% for details in billing_details %}
+														<p>{{host}}<br>
+														{{details.company}}<br>
+														{{details.firstname}}<br>
+														{{details.lastname}}<br>
+														{{details.phone_number}}<br>
+														{{details.email}}<br>
+														{% endfor %}
+														<a href="{% url 'edit_details' %}">Edit <i class="icon-edit"></i></a></p>
+														{% else %}
+														<p>no details yet </p>
+														<a href="{% url 'checkout' %}">create <i class="icon-edit"></i></a></p>
+														{% endif %}
+								    				</div><!-- End .card-body -->
+								    			</div><!-- End .card-dashboard -->
+								    		</div><!-- End .col-lg-6 -->
+
+								    		<div class="col-lg-6">
+								    			<div class="card card-dashboard">
+								    				<div class="card-body">
+								    					<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
+														{% if billing_details %}
+														{% for details in billing_details %}
+														<p>{{details.town_or_city}}<br>
+														{{details.street_address}}<br>
+														{{details.state}}, {{details.postal_code}}<br>
+														{{details.country}}<br></p>
+														<a href="{% url 'edit_shipping_address' %}">Edit <i class="icon-edit"></i></a></p>
+														{% endfor %}
+														{% else %}
+														<p>You have not set up this type of address yet.<br>
+														<a href="">create <i class="icon-edit"></i></a></p>
+														{% endif %}
+								    				</div><!-- End .card-body -->
+								    			</div><!-- End .card-dashboard -->
+								    		</div><!-- End .col-lg-6 -->
+								    	</div><!-- End .row -->
+								    </div><!-- .End .tab-pane -->
+
+								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+								    	<form method="post" action="">
+											{% csrf_token %}
+											{{ form.as_p }}
+											<button type="submit" class="btn btn-outline-primary-2">
+												<span>SAVE CHANGES</span>
+												<i class="icon-long-arrow-right"></i>
+											</button>
+										  </form>
+								    </div><!-- .End .tab-pane -->
+								</div>
+	                		</div><!-- End .col-lg-9 -->
+	                	</div><!-- End .row -->
+	                </div><!-- End .container -->
+                </div><!-- End .dashboard -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+{% endblock %}

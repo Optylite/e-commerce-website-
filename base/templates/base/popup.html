@@ -1,0 +1,18 @@
+
+<div class="col-6" style="width: max-content; height: max-content;">
+    <div class="product product-7 text-center">
+        <figure class="product-media">
+            <a href="{% url 'details' items.id %}">
+                <img src="{{items.image.url}}" alt="Product image" class="product-image" style="width: auto; height: auto;">
+            </a>
+
+            <div class="product-action-vertical">
+                <a href="{% url 'add_to_wishlist' items.id %}" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+            </div><!-- End .product-action-vertical -->
+
+            <div class="product-action">
+                <a href="{% url 'add_to_cart' items.id %}" class="btn-product btn-cart"><span>add to cart</span></a>
+            </div><!-- End .product-action -->
+        </figure><!-- End .product-media -->
+        
+    </div>

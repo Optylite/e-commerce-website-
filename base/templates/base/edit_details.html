@@ -1,0 +1,37 @@
+<!-- edit_billing_details.html -->
+{% extends 'main.html' %}
+
+{% block content %}
+<form method="post" action="{% url 'edit_details' %}">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-sm-6">
+            <label for="username">Username *</label>
+            <input type="text" class="form-control" name="username" value="{{ user.username }}" required>
+        </div><!-- End .col-sm-6 -->
+
+        <div class="col-sm-6">
+            <label for="company">Company *</label>
+            <input type="text" class="form-control" name="company" value="{{ billing_details.company }}" required>
+        </div><!-- End .col-sm-6 -->
+    </div><!-- End .row -->
+
+    <label for="firstname">Firstname *</label>
+    <input type="text" class="form-control" name="firstname" value="{{ billing_details.firstname }}" required>
+
+    <label for="lastname">Lastname *</label>
+    <input type="text" class="form-control" name="lastname" value="{{ billing_details.lastname }}" required>
+
+    <label for="phone_number">Phone number *</label>
+    <input type="text" class="form-control" name="phone_number" value="{{ billing_details.phone_number }}">
+
+    <label for="email">Email *</label>
+    <input type="email" class="form-control" name="email" value="{{ billing_details.email }}">
+
+
+    <button type="submit" class="btn btn-outline-primary-2">
+        <span>SAVE CHANGES</span>
+        <i class="icon-long-arrow-right"></i>
+    </button>
+</form>
+{% endblock %}
